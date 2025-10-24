@@ -7,9 +7,10 @@ import { createAccountService } from '@/lib/accounts/service'
  */
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const body = await request.json()
 
     if (!body.tweet_text || typeof body.tweet_text !== 'string') {
@@ -23,7 +24,7 @@ export async function POST(
     }
 
     const service = createAccountService()
-    const result = await service.testAccountAnalysis(params.id, body.tweet_text)
+    const result = await service.testAccountAnalysis(id, body.tweet_text)
 
     if (!result.success) {
       return NextResponse.json(

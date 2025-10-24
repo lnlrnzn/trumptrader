@@ -19,7 +19,7 @@ export interface AsterDEXConfig {
 
 export class AsterDEXClient {
   private config: AsterDEXConfig
-  private client: AxiosInstance
+  public client: AxiosInstance
 
   constructor(config: AsterDEXConfig) {
     // Validate config

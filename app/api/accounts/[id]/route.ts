@@ -8,11 +8,12 @@ import type { UpdateAccountInput } from '@/types/account'
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const service = createAccountService()
-    const account = await service.getAccountById(params.id)
+    const account = await service.getAccountById(id)
 
     if (!account) {
       return NextResponse.json(
@@ -29,7 +30,7 @@ export async function GET(
     const includeStats = searchParams.get('stats') === 'true'
 
     if (includeStats) {
-      const stats = await service.getAccountStats(params.id)
+      const stats = await service.getAccountStats(id)
       return NextResponse.json({
         success: true,
         data: { ...account, stats }
@@ -58,9 +59,10 @@ export async function GET(
  */
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const body: UpdateAccountInput = await request.json()
 
     // Validate username format if provided
@@ -87,7 +89,7 @@ export async function PATCH(
     }
 
     const service = createAccountService()
-    const account = await service.updateAccount(params.id, body)
+    const account = await service.updateAccount(id, body)
 
     return NextResponse.json({
       success: true,
@@ -112,13 +114,14 @@ export async function PATCH(
  */
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const service = createAccountService()
 
     // Check if account exists first
-    const account = await service.getAccountById(params.id)
+    const account = await service.getAccountById(id)
     if (!account) {
       return NextResponse.json(
         {
@@ -129,7 +132,7 @@ export async function DELETE(
       )
     }
 
-    await service.deleteAccount(params.id)
+    await service.deleteAccount(id)
 
     return NextResponse.json({
       success: true,

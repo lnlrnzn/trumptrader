@@ -262,7 +262,7 @@ export class TwitterMonitor {
   /**
    * Handle received tweet
    */
-  private async handleTweet(message: any): void {
+  private async handleTweet(message: any): Promise<void> {
     try {
       this.stats.totalTweetsReceived++
       this.stats.lastTweetAt = new Date()
