@@ -19,12 +19,14 @@ export async function POST(request: NextRequest) {
     console.log('Rule tag:', payload.rule_tag)
     console.log('Tweets received:', payload.tweets?.length || 0)
 
-    // Validate payload
+    // Validate payload - allow test requests without tweets
     if (!payload.tweets || payload.tweets.length === 0) {
-      return NextResponse.json(
-        { error: 'No tweets in payload' },
-        { status: 400 }
-      )
+      console.log('⚠️  Empty payload - likely a test request from TwitterAPI.io')
+      return NextResponse.json({
+        success: true,
+        message: 'Webhook endpoint is active and ready',
+        processed: 0
+      })
     }
 
     // Process each tweet
