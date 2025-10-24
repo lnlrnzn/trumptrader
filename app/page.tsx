@@ -1,65 +1,113 @@
-import Image from "next/image";
+'use client'
 
-export default function Home() {
+import { HeroStats } from '@/components/dashboard/HeroStats'
+import { TradingChart } from '@/components/dashboard/TradingChart'
+import { PriceTicker } from '@/components/dashboard/PriceTicker'
+import { OrderbookPanel } from '@/components/dashboard/OrderbookPanel'
+import { RightPanel } from '@/components/dashboard/RightPanel'
+import { BottomTabs } from '@/components/dashboard/BottomTabs'
+import { Badge } from '@/components/ui/badge'
+import Link from 'next/link'
+import { Settings, Activity } from 'lucide-react'
+
+export default function HomePage() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+    <div className="min-h-screen bg-background flex flex-col">
+      {/* Compact DEX Header */}
+      <header className="border-b border-border bg-card sticky top-0 z-50">
+        <div className="max-w-[2000px] mx-auto px-3 md:px-4 py-2">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Activity className="h-5 w-5 text-primary" />
+              <h1 className="text-sm md:text-base font-bold">
+                Trump Trading Bot
+              </h1>
+              <Badge variant="outline" className="hidden md:flex text-[10px] px-1.5 py-0.5">
+                <span className="w-1 h-1 bg-green-500 rounded-full mr-1 animate-pulse"></span>
+                LIVE
+              </Badge>
+            </div>
+
+            <Link
+              href="/admin"
+              className="flex items-center gap-1.5 px-2 py-1 hover:bg-muted rounded text-xs font-medium transition-colors"
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+              <Settings className="h-3.5 w-3.5" />
+              <span className="hidden sm:inline">Admin</span>
+            </Link>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </header>
+
+      {/* Main Trading Interface */}
+      <main className="flex-1 max-w-[2000px] mx-auto w-full p-2">
+        {/* Mobile: Stats First */}
+        <section className="xl:hidden mb-2">
+          <HeroStats />
+        </section>
+
+        {/* Responsive Grid Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-12 gap-2">
+          {/* Chart Column */}
+          <div className="lg:col-span-2 xl:col-span-6 flex flex-col gap-2 xl:h-[calc(100vh-68px)]">
+            {/* Price Ticker */}
+            <PriceTicker />
+
+            {/* Chart */}
+            <TradingChart />
+
+            {/* Bottom Tabs (AsterDEX style) */}
+            <BottomTabs />
+
+            {/* Desktop: Stats at Bottom */}
+            <div className="hidden xl:block">
+              <HeroStats />
+            </div>
+          </div>
+
+          {/* Orderbook - Hidden on mobile, shown on tablet+ */}
+          <div className="hidden lg:block xl:col-span-3">
+            <div className="sticky top-[52px]">
+              <OrderbookPanel />
+            </div>
+          </div>
+
+          {/* Right Panel - Full width on mobile, shares row with orderbook on tablet */}
+          <div className="lg:col-span-2 xl:col-span-3">
+            <div className="xl:sticky xl:top-[52px]">
+              <RightPanel />
+            </div>
+          </div>
+        </div>
+
+        {/* Mobile Orderbook - Collapsible section at bottom */}
+        <div className="lg:hidden mt-2">
+          <OrderbookPanel />
         </div>
       </main>
+
+      {/* Minimal Footer */}
+      <footer className="border-t border-border bg-card/30 mt-auto">
+        <div className="max-w-[2000px] mx-auto px-4 py-3">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-2 text-[10px] md:text-xs text-muted-foreground">
+            <p>AI Trading • Next.js • Supabase • Grok 4</p>
+            <div className="flex items-center gap-3">
+              <Link href="/admin" className="hover:text-primary transition-colors">
+                Admin
+              </Link>
+              <span className="text-border">•</span>
+              <a
+                href="https://github.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-primary transition-colors"
+              >
+                GitHub
+              </a>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
-  );
+  )
 }
