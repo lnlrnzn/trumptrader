@@ -493,14 +493,13 @@ export class AsterDEXClient {
  * Create AsterDEX client from environment variables
  */
 export function createAsterClient(): AsterDEXClient {
-  // Use API Wallet if provided, otherwise use main wallet
+  // Use Main Wallet for both user and signer (no separate API wallet)
   const userAddress = process.env.ASTER_DEX_KEY!
-  const apiWalletAddress = process.env.API_WALLET_ADDRESS
-  const apiWalletPrivateKey = process.env.API_WALLET_PRIVATE_KEY
+  const privateKey = process.env.ASTER_SECRET_KEY!
 
   const config: AsterDEXConfig = {
     userAddress: userAddress,
-    privateKey: apiWalletPrivateKey || process.env.ASTER_SECRET_KEY!,
+    privateKey: privateKey,
     apiUrl: process.env.ASTER_API_URL || 'https://fapi.asterdex.com',
     wsUrl: process.env.ASTER_WS_URL || 'wss://fstream.asterdex.com'
   }
