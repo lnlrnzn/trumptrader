@@ -187,9 +187,29 @@ async function processTweet(tweet: Tweet) {
 
     // Step 5: Execute trade with account-specific settings
     console.log('2️⃣ Executing trade...')
+    console.log('📊 Trade Settings:', {
+      accountId: account.id,
+      symbols: account.symbols,
+      positionSizePercent: account.position_size_percent,
+      leverage: account.leverage,
+      minThreshold: minThreshold
+    })
 
+    // Check if AsterDEX credentials are configured
+    if (!process.env.ASTER_DEX_KEY) {
+      console.error('❌ ASTER_DEX_KEY not configured in environment variables!')
+      return
+    }
+    if (!process.env.API_WALLET_PRIVATE_KEY && !process.env.ASTER_SECRET_KEY) {
+      console.error('❌ API_WALLET_PRIVATE_KEY or ASTER_SECRET_KEY not configured!')
+      return
+    }
+
+    console.log('✅ AsterDEX credentials found, creating client...')
     const asterClient = createAsterClient()
+    console.log('✅ AsterDEX client created, initializing trading engine...')
     const tradingEngine = createTradingEngine(asterClient)
+    console.log('✅ Trading engine ready')
 
     // Build decision object for trading engine
     const decision = {
@@ -228,6 +248,11 @@ async function processTweet(tweet: Tweet) {
 
   } catch (error) {
     console.error('❌ Error processing tweet:', error)
+    console.error('Error details:', {
+      message: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined,
+      name: error instanceof Error ? error.name : undefined
+    })
   }
 }
 
