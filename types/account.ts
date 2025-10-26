@@ -55,7 +55,7 @@ export interface AccountStats {
 }
 
 export interface AccountWithStats extends TwitterAccount {
-  stats?: AccountStats
+  stats: AccountStats | null
 }
 
 export interface Tweet {
