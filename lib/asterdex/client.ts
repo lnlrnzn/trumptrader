@@ -31,7 +31,7 @@ export class AsterDEXClient {
     this.config = config
     this.client = axios.create({
       baseURL: config.apiUrl,
-      timeout: 10000,
+      timeout: 30000, // Increased from 10s to 30s for slow APIs
       headers: {
         'Content-Type': 'application/json'
       }
