@@ -150,8 +150,8 @@ export function prepareSignedRequest(
   // - nonce, user, signer, signature (added here)
   return {
     headers: {
-      'Content-Type': 'application/json'
-      // NO X-MBX-APIKEY header - authentication is via signature in body/params only
+      'Content-Type': 'application/json',
+      'X-MBX-APIKEY': process.env.ASTER_API_KEY || ''  // Broker API Key for agent authorization
     },
     body: {
       ...params,
