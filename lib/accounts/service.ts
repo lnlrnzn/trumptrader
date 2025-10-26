@@ -246,7 +246,7 @@ export class AccountService {
         const stats = await this.getAccountStats(account.id)
         return {
           ...account,
-          stats: stats || undefined
+          stats: stats ?? null
         }
       })
     )
