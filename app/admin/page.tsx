@@ -330,6 +330,115 @@ export default function AdminPage() {
           </div>
         )}
 
+        {/* Test Panel */}
+        {testingAccount && (
+          <div className="mt-8 bg-gray-800 rounded-lg p-6">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-2xl font-bold">🧪 Test Analysis</h2>
+              <button
+                onClick={() => {
+                  setTestingAccount(null)
+                  setTestTweet('')
+                  setTestResult(null)
+                }}
+                className="px-4 py-2 bg-gray-600 hover:bg-gray-700 rounded"
+              >
+                Close
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-2">Test Tweet</label>
+                <textarea
+                  value={testTweet}
+                  onChange={(e) => setTestTweet(e.target.value)}
+                  className="w-full px-3 py-2 bg-gray-700 rounded h-24"
+                  placeholder="Enter a sample tweet to test the LLM analysis..."
+                />
+              </div>
+
+              <button
+                onClick={() => handleTest(testingAccount)}
+                className="px-6 py-2 bg-blue-600 hover:bg-blue-700 rounded font-medium"
+              >
+                Analyze Tweet
+              </button>
+
+              {testResult && (
+                <div className="mt-6 p-4 bg-gray-700 rounded-lg">
+                  <h3 className="font-bold mb-3 text-lg">Analysis Result</h3>
+
+                  <div className="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                      <div className="text-sm text-gray-400">Signal</div>
+                      <div className={`text-2xl font-bold ${
+                        testResult.signal === 'LONG' ? 'text-green-500' :
+                        testResult.signal === 'SHORT' ? 'text-red-500' :
+                        'text-gray-400'
+                      }`}>
+                        {testResult.signal}
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-sm text-gray-400">Confidence</div>
+                      <div className="text-2xl font-bold">
+                        {testResult.confidence}%
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-sm text-gray-400">Adjusted Confidence</div>
+                      <div className="text-2xl font-bold">
+                        {testResult.adjusted_confidence}%
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-sm text-gray-400">Expected Magnitude</div>
+                      <div className="text-lg font-medium capitalize">
+                        {testResult.expected_magnitude || 'N/A'}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="text-sm text-gray-400 mb-2">Reasoning</div>
+                    <div className="text-sm bg-gray-800 p-3 rounded">
+                      {testResult.reasoning}
+                    </div>
+                  </div>
+
+                  {testResult.adjusted_confidence >= 75 && testResult.signal !== 'HOLD' && (
+                    <div className="mt-4 p-3 bg-green-900 border border-green-700 rounded">
+                      <div className="font-medium text-green-300">✅ Trade Would Execute</div>
+                      <div className="text-sm text-green-400 mt-1">
+                        Confidence is above threshold - this would trigger a {testResult.signal} position
+                      </div>
+                    </div>
+                  )}
+
+                  {testResult.adjusted_confidence < 75 && testResult.signal !== 'HOLD' && (
+                    <div className="mt-4 p-3 bg-yellow-900 border border-yellow-700 rounded">
+                      <div className="font-medium text-yellow-300">⚠️ Trade Would Not Execute</div>
+                      <div className="text-sm text-yellow-400 mt-1">
+                        Confidence is below threshold ({testResult.adjusted_confidence}% {'<'} 75%)
+                      </div>
+                    </div>
+                  )}
+
+                  {testResult.signal === 'HOLD' && (
+                    <div className="mt-4 p-3 bg-gray-600 border border-gray-500 rounded">
+                      <div className="font-medium text-gray-300">⏸️ No Trade Signal</div>
+                      <div className="text-sm text-gray-400 mt-1">
+                        LLM determined this tweet does not warrant a trade
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
         {/* Modal */}
         {showModal && (
           <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">
