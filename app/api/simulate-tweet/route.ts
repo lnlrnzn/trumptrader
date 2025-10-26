@@ -55,9 +55,9 @@ export async function POST(request: NextRequest) {
         },
         created_at: fakeTimestamp,
         metrics: {
-          like_count: 0,
-          retweet_count: 0,
-          reply_count: 0
+          likes: 0,
+          retweets: 0,
+          replies: 0
         }
       }],
       timestamp: fakeTimestamp
